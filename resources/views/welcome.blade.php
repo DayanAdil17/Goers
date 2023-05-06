@@ -21,6 +21,8 @@
         </style>
     </head>
     <body class="antialiased">
-        
+        <div id="apps">        
+            @yield('content')          
+        </div>
     </body>
 </html>
