@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AddRestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,8 +29,16 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::get('/login', [App\Http\Controllers\AuthController::Class,'login']);
 
-Route::get('/dashboard', [App\Http\Controllers\AuthController::Class,'dashboard']);
+Route::get('/', [App\Http\Controllers\AuthController::Class,'dashboard']);
+
+Route::get('/add-restaurant', [App\Http\Controllers\AddRestaurantController::Class,'add_restaurant']);
+
+Route::post('/add-restaurant-data', [App\Http\Controllers\AddRestaurantController::Class,'store']);
 
 Route::get('/register', [App\Http\Controllers\AuthController::Class,'register']);
 
 Route::post('/registration', [App\Http\Controllers\AuthController::Class,'registration']);
+
+Route::post('/login_check', [App\Http\Controllers\AuthController::Class, 'loginValidation']);
+
+Route::get('/restaurants', [DashboardController::class, 'filterRestaurants']);

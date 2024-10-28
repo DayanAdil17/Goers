@@ -1,4 +1,4 @@
-@extends('layouts.apps')
+@extends('layouts.app')
 @section('title' , 'REGISTER')
 @section('content')
     <div id="login"></div>

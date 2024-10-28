@@ -4,14 +4,16 @@ import { BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 
 import Layout from './Layout'
 import Login from './User/Login';
+import Register from './User/Register'
 
 export default function Indexs() {
   return (
     <div>
         <Router>
             <Switch>
-                <Route path='/dashboard' exact component={Layout}/>
+                <Route path='/' exact component={Layout}/>
                 <Route path='/login' exact component={Login}/>
+                <Route path='/register' exact component={Register}/>
             </Switch>
         </Router>
     </div>

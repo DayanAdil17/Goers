@@ -24,8 +24,13 @@
         "sass-loader": "^11.0.1"
     },
     "dependencies": {
-        "@material-ui/core": "^4.12.4",
-        "@material-ui/icons": "^4.11.3",
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
+        "@mui/icons-material": "^6.1.5",
+        "@mui/lab": "^6.0.0-beta.13",
+        "@mui/material": "^6.1.5",
+        "@mui/x-date-pickers": "^7.22.0",
+        "date-fns": "^2.30.0",
         "react-router-dom": "^5.2.0"
     }
 }

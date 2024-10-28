@@ -32,14 +32,50 @@ class AuthController extends Controller{
     public function login(){
        
         $year = Date('Y');
-        return view('User.login',  compact('year') );
+        $userDatabase = DB::table('users') -> get();
+        return view('User.login',  compact('year', 'userDatabase') );
         
+    }
+
+    public function loginValidation(Request $request)
+    {
+        $request->validate([
+            'userName' => 'required',
+            'password' => 'required',
+        ]);
+
+        $username = $request->userName;
+        $password = md5($request->password); // Hash the input password for comparison
+
+        // Find the user by username
+        $user = DB::table('users')
+                ->where('userName', $username)
+                ->where('password', $password) // Check hashed password directly
+                ->first();
+
+        if ($user) {
+            // Clear any existing session data
+            Session::flush();
+
+            // Store user details in the session
+            Session::put('userId', $user->id);
+            Session::put('userName', $user->userName);
+            Session::put('fullName', $user->fullName); // Corrected from 'name' to 'fullName'
+            Session::put('role', $user->role);
+            Session::put('isLoggedIn', true);
+
+            return response()->json(['message' => 'Logged in successfully']);
+        } else {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
     }
 
     public function dashboard(){
        
         $year = Date('Y');
-        return view('User.dashboard',  compact('year') );
+        $userName = Session::get('userName');
+        $userData = DB::table('users') -> where ('userName', $userName) -> first();
+        return view('User.dashboard',  compact('year', 'userData') );
         
     }
 
@@ -52,12 +88,21 @@ class AuthController extends Controller{
 
     public function registration(Request $request){
        
+        $request->validate([
+            'fullName' => 'required',
+            'userName' => 'required|unique:users', // Ensure the username is unique
+            'password' => 'required',
+        ]);
+
         $fullName = $request -> fullName;
         $userName = $request -> userName;
         $password = md5($request -> password);
+        $role = $request->role ?? 'USER'; // Default to 'USER' if no role is provided
 
-        DB::insert('insert into user (name, userName, password) values (?,?,?)', [$fullName, $userName, $password]);
+        DB::insert('insert into users (fullName, userName, password, role) values (?,?,?,?)', [$fullName, $userName, $password, $role]);
         
     }
+
+
 }
 

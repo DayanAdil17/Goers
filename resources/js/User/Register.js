@@ -1,79 +1,65 @@
+import { Button, Grid, Paper, TextField, Typography } from '@mui/material'
 import React from 'react'
+import axios from 'axios'
 
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import SuccessNotification from '../components/SuccessNotification'
 
 export default function Register() {
+    const [userName, setUserName] = React.useState("")
+    const [fullName, setFullName] = React.useState("")
+    const [password, setPassword] = React.useState("")
+    const [openSnack, setOpenSnack] = React.useState(false)
 
-const [fullName, setFullName] = React.useState("")
-const [userName, setUserName] = React.useState("")
-const [password, setPassword] = React.useState("")
+    const handleRegistration = (e) => {
+        e.preventDefault()
 
-const register = (event) => {
-    event.preventDefault();
+        var data = {
+            userName : userName,
+            fullName : fullName,
+            password : password
+        }
 
-    let data = {
-        fullName : fullName,
-        userName : userName,
-        password : password
+        axios.post('/registration',data).then((res)=>{
+            setOpenSnack(true);
+        });
     }
-
-    axios.post('/registration',data).then(()=>{
-        window.location.href = "/register"
-      })
-}
-
   return (
-    <div>        
-        <Grid container direction='row' alignItems='center' justifyContent='center' spacing = {1}>
-            <Grid item xs={4}>
-                <Card style = {{padding:'5px'}}>
-                    <CardContent>
-                        <Grid container direction='row' alignItems='center' justifyContent='center' spacing={1}>
-                            <Grid item xs = {12}>
-                                <TextField                                
-                                label="Full Name"
-                                fullWidth="true"                                                                
-                                variant="outlined" 
-                                value={fullName}
-                                onChange={(event) => {setFullName(event.target.value)}}                               
-                                />
-                            </Grid>
-                            <Grid item xs = {12}>
-                                <TextField                                
-                                label="User Name"
-                                fullWidth="true"                                                                
-                                variant="outlined"
-                                value={userName}
-                                onChange={(event) => {setUserName(event.target.value)}}                                 
-                                />
-                            </Grid>
-                            <Grid item xs = {12}>
-                                <TextField                                
-                                label="Password"
-                                fullWidth="true"                                                                
-                                variant="outlined"
-                                value={password}
-                                type="password"
-                                onChange={(event) => {setPassword(event.target.value)}}                                 
-                                />
-                            </Grid>    
-                            <Grid item xs = {12}>
-                                <form method="post" onSubmit={register}>
-                                    <Button variant='contained' color='primary' type="submit" style={{float:'right'}}>
-                                        REGIST ME!
-                                    </Button>
-                                </form>
-                            </Grid>                                                    
-                        </Grid>                       
-                    </CardContent>                    
-                </Card>
+    <Grid 
+      container 
+      direction="row" 
+      justifyContent="center" 
+      alignItems="center" 
+      spacing={2} 
+      sx={{ minHeight: "100vh" }} // Ensures the container fills the viewport height
+    >
+      <Grid item xs={12} sm={11} md={11}>
+        <Paper elevation={4} sx={{ padding: 5 }}>
+          <Grid container direction="row" alignItems="center" justifyContent="center" spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant='h4' sx = {{fontWeight: 'bold'}}>
+                REGISTER
+              </Typography>
             </Grid>
-        </Grid>
-    </div>
+            <Grid item xs={12}>
+              <TextField variant="outlined" label="User Name" fullWidth value = { userName } onChange={(event) => { setUserName(event.target.value) } } />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField variant="outlined" label="Full Name" fullWidth value = { fullName } onChange = {(event) => { setFullName(event.target.value) }} />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField variant="outlined" label="Password" type = "password" fullWidth value = { password } onChange ={(event) => { setPassword(event.target.value) }} />
+            </Grid>
+            <Grid item xs={12}>
+              <form onSubmit={handleRegistration}>
+                <Button variant="contained" fullWidth type = "submit">
+                    Register
+                </Button>
+              </form>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
+      <SuccessNotification openSnack = {openSnack} closeSnack = {setOpenSnack} message = "User registered successfully" navigate="/login" />
+    </Grid>
   )
 }
